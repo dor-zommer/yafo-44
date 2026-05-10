@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>הדמיה תלת-ממדית — דרך יפו 44 / סמטת השוק 4 · על פי תיק העירייה</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; height:100%; overflow:hidden; }
+  body {
+    font-family: -apple-system, "Heebo", "Assistant", "Segoe UI", sans-serif;
+    background:#0e0e12; color:#e8e8ec;
+  }
+  #c { position:fixed; inset:0; z-index:0; display:block; }
+
+  #panel {
+    position:fixed; top:0; right:0; width:360px; height:100vh;
+    overflow-y:auto; padding:26px 24px 90px;
+    background:rgba(12,12,16,0.94);
+    border-right:1px solid #1f1f28;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index:10;
+  }
+  #panel::-webkit-scrollbar { width: 5px; }
+  #panel::-webkit-scrollbar-thumb { background: #2a2a35; border-radius: 3px; }
+  #panel::-webkit-scrollbar-track { background: transparent; }
+
+  h1 {
+    font-size: 26px; margin: 0 0 2px;
+    font-weight: 800; letter-spacing: -0.02em;
+    color: #f5d76e;
+    line-height: 1.1;
+  }
+  .sub {
+    font-size: 12px; color: #888; margin-bottom: 22px;
+    letter-spacing: 0.01em;
+  }
+
+  .lede {
+    font-size: 13.5px; line-height: 1.65;
+    color: #e8e8ec;
+    margin: 0 0 24px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #1f1f28;
+  }
+  .lede strong { color: #ffd0d0; font-weight: 700; }
+
+  h2 {
+    font-size: 10.5px; font-weight: 800;
+    margin: 26px 0 10px;
+    color: #7fc7e8;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+  h2.danger { color: #ff8080; }
+
+  .fact {
+    font-size: 12.5px; line-height: 1.6;
+    margin: 6px 0;
+    color: #d0d0d6;
+  }
+  .fact strong { color: #fff; }
+
+  button {
+    background: #1a1a22; border: 1px solid #2a2a35;
+    color: #d0d0d6; padding: 7px 12px; margin: 3px 4px 3px 0;
+    cursor: pointer; font-family: inherit; font-size: 12px;
+    border-radius: 5px; transition: all 0.15s;
+    font-weight: 500;
+  }
+  button:hover { background: #23232c; border-color: #3a3a48; color:#fff; }
+  button.active { background: #6e2a2a; border-color: #a55; color: #fff; }
+  button.active.passage { background:#1f4a55; border-color:#4ab; }
+  button.active.pilotis { background:#5a3d1a; border-color:#d99540; color:#ffe0a8; }
+  button.active.moisture { background:#3a2418; border-color:#a85a3a; color:#ffc8a0; }
+
+  .controls-block {
+    background: rgba(20,20,28,0.6);
+    border: 1px solid #1f1f28;
+    border-radius: 6px;
+    padding: 14px 14px 12px;
+    margin: 0 0 22px;
+  }
+  .controls-block h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  .controls-block .legend-grid {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #1f1f28;
+  }
+
+  .legend-grid {
+    display: grid; grid-template-columns: 1fr; gap: 5px;
+    margin-top: 6px;
+  }
+  .legend {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 11.5px; color:#aaa;
+  }
+  .swatch {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Timeline — clean, scannable */
+  .timeline {
+    margin-top: 8px;
+    position: relative;
+  }
+  .timeline::before {
+    content:''; position:absolute;
+    right: 6px; top: 4px; bottom: 4px;
+    width: 1px; background: #2a2a35;
+  }
+  .tl-item {
+    margin: 0; padding: 12px 22px 12px 0;
+    position: relative;
+    border-bottom: 1px solid #16161c;
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-item::before {
+    content:''; position:absolute;
+    right: 1px; top: 18px;
+    width: 11px; height: 11px;
+    background: #3a3a48;
+    border: 2px solid #0e0e12;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  .tl-item.warn::before { background: #f5b840; box-shadow: 0 0 0 2px #0e0e12; }
+  .tl-item.danger::before {
+    background: #ff5050;
+    box-shadow: 0 0 0 2px #0e0e12, 0 0 8px #ff5050;
+  }
+  .tl-date {
+    font-size: 10.5px; color: #6f7787;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+  .tl-item.danger .tl-date { color: #ff9090; }
+  .tl-text {
+    font-size: 12.5px; line-height: 1.5; color: #d8d8de;
+  }
+  .tl-text strong { color: #fff; }
+
+  #info {
+    position: fixed; bottom: 16px; left: 16px;
+    background: rgba(12,12,16,0.88);
+    padding: 7px 12px; font-size: 11px; color: #777;
+    border: 1px solid #1f1f28; border-radius: 4px;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+  }
+
+  .pulse-dot {
+    display:inline-block; width:8px; height:8px;
+    background:#ff5050; border-radius:50%;
+    margin-right:6px; vertical-align: middle;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform:scale(1); opacity:1; }
+    50% { transform:scale(1.5); opacity:0.4; }
+  }
+
+  .deviation {
+    background: rgba(245,184,64,0.06);
+    border-right: 2px solid #f5b840;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-size: 12px; line-height: 1.55;
+    color: #e8d4a8;
+    border-radius: 2px;
+  }
+  .deviation strong { color: #ffd980; }
+
+  /* Two-phase build list — NYT style */
+  .phases { margin: 4px 0 0; }
+  .phase {
+    padding: 14px 0;
+    border-bottom: 1px solid #1a1a22;
+  }
+  .phase:last-child { border-bottom: none; }
+  .phase-year {
+    font-size: 11px; font-weight: 800;
+    color: #f5d76e;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .phase-title {
+    font-size: 14px; font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .phase-detail {
+    font-size: 12.5px; line-height: 1.55;
+    color: #b0b0b8;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="panel">
+  <h1>דרך יפו 44</h1>
+  <div class="sub">בניין מסחרי-מגורים בן שש קומות · יפו</div>
+
+  <p class="lede">
+    ב-1 באפריל 2026 קרס עמוד נושא בפינה הדרום-מזרחית של הבניין, וגרר אחריו את תקרות הקומות שמעליו. <strong>חלחול מים אל אותו עמוד תמך — שתועד במשך עשור וטופל ב"שפכטל וצבע" בלבד — היה בידיעת חברת הניהול והעירייה. עיריית תל אביב עצמה רשומה כבעלים של 474 מ"ר במרתף הבניין.</strong>
+  </p>
+
+  <div class="controls-block">
+    <h2>תצוגה</h2>
+    <button id="b-passage" class="passage">פסאז'</button>
+    <button id="b-pilotis" class="pilotis">קומה מפולשת</button>
+    <button id="b-moisture" class="moisture">רטיבות</button>
+    <button id="b-demo">אזור הריסה</button>
+    <button id="b-collapse">נקודת הקריסה</button>
+    <button id="b-xray">חצי-שקיפות</button>
+    <button id="b-reset">איפוס</button>
+
+    <div class="legend-grid">
+      <div class="legend"><div class="swatch" style="background:#e4d5b8"></div>קומות עליונות (שנות ה-70)</div>
+      <div class="legend"><div class="swatch" style="background:#d4a13a"></div>שתי הקומות הראשונות (שנות ה-30)</div>
+      <div class="legend"><div class="swatch" style="background:#5a4a3a"></div>מרתף + מקלט (בעלות העירייה)</div>
+      <div class="legend"><div class="swatch" style="background:#d99540"></div>קומה מפולשת — תוכננה פתוחה, נסגרה בפועל</div>
+      <div class="legend"><div class="swatch" style="background:#8a4a4a"></div>אגף מזרחי — אזור הריסה</div>
+      <div class="legend"><div class="swatch" style="background:#3d6a82"></div>פסאז' פנימי</div>
+      <div class="legend"><div class="swatch" style="background:#4a2a18"></div>רטיבות כרונית — עמוד התמך</div>
+      <div class="legend"><div class="swatch" style="background:#ff4400"></div>נקודת הקריסה</div>
+    </div>
+  </div>
+
+  <h2 class="danger"><span class="pulse-dot"></span>ציר הזמן</h2>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-date">2008 · מארס</div>
+      <div class="tl-text">היועץ המשפטי של העירייה ללשכת הפיקוח: <strong>"בתיק הבניין אין היתר בניה מקורי לבנין זה"</strong>. בלי היתר — אין אפשרות לאכוף שימוש חורג.</div>
+    </div>
+
+    <div class="tl-item warn">
+      <div class="tl-date">2007 · דצמבר</div>
+      <div class="tl-text">יהורם חזי, מנהל יחידת מניעת דלקות, ל­עירייה: <strong>"דבר זה מהווה סכנה בזמן שריפה לשוהים בדירות עקב מטען אש גדול הנמצא בבניין"</strong>. דירות מגורים פיראטיות בנכסים מסחריים.</div>
+    </div>
+
+    <div class="tl-item warn">
+      <div class="tl-date">2011 · מארס</div>
+      <div class="tl-text">צעיר בן 28 נופל ממדרגות לולייניות בגלריה לא חוקית של בית קפה בקומה 2. שברים בבסיס הגולגולת ודימום במוח.</div>
+    </div>
+
+    <div class="tl-item danger">
+      <div class="tl-date">2011 · מאי</div>
+      <div class="tl-text">דיווח אנונימי לעירייה: <strong>"בלוקים נופלים מקומה שלישית"</strong>, וחלוקת דירות בלתי חוקית.</div>
+    </div>
+
+    <div class="tl-item warn">
+      <div class="tl-date">2018 · ינואר</div>
+      <div class="tl-text">תיק מבנה מסוכן ראשון נפתח על קירוי פטיו שקורס באגף המזרחי. תיקון נקודתי, התיק נסגר תוך שבועיים.</div>
+    </div>
+
+    <div class="tl-item danger">
+      <div class="tl-date">2018 · נובמבר</div>
+      <div class="tl-text">תיק מבנה מסוכן שני: התפרקות טיח ובטון לאורך כל החזית הדרומית, ברזלי זיון חשופים וחלודים. המהנדס הבודק: <strong>"סכנה ממשית לדיירים ולציבור"</strong>.</div>
+    </div>
+
+    <div class="tl-item warn">
+      <div class="tl-date">2020 · פברואר</div>
+      <div class="tl-text">התיק נסגר לאחר תיקון מוגבל לחזית. <strong>בתיק אין תיעוד של סקר מבנה לעמודים הנושאים.</strong></div>
+    </div>
+
+    <div class="tl-item danger">
+      <div class="tl-date">לאורך השנים</div>
+      <div class="tl-text">דיירים מתלוננים על העמוד הדרום-מזרחי שהופך <strong>"מדי שנה כמו ספוג"</strong>. מים זורמים מתוך העמוד עצמו. חברת פירר משיבה: שפכטל וצבע. סעיף בחוזי השכירות פוטר את המשכיר מתיקון רטיבות.</div>
+    </div>
+
+    <div class="tl-item danger">
+      <div class="tl-date">2026 · 1 באפריל</div>
+      <div class="tl-text"><strong>העמוד בקומה 2 קורס.</strong> תקרות הקומות מעליו נופלות זו על זו. שני פצועים בלבד — הקריסה התרחשה בבוקר ערב ליל הסדר. צו הריסה לכל האגף המזרחי.</div>
+    </div>
+
+  </div>
+
+  <h2>הבניין</h2>
+  <div class="fact">שש קומות מעל מרתף שבו מקלט ציבורי. שלד בטון מזוין; תקרות ערוגות דו-כיווניות; קירות מילוי לבנים. פסאז' מסחרי חוצה את קומת הקרקע מדרך יפו לסמטת השוק. בעלי הנכסים: 31 ישויות, ביניהן — חברת החשמל, ועיריית תל אביב-יפו עצמה.</div>
+
+  <h2>בנייה בשני שלבים</h2>
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-year">שנות ה-30</div>
+      <div class="phase-title">שתי הקומות הראשונות</div>
+      <div class="phase-detail">קומת מסחר וקומת ביניים, על ציר הקרקע המסחרי של יפו המנדטורית. תחילה שכנה כאן חברת "מעדן מחסני קירור בע"מ".</div>
+    </div>
+    <div class="phase">
+      <div class="phase-year">שנות ה-70</div>
+      <div class="phase-title">ארבע קומות נוספות מעליהן</div>
+      <div class="phase-detail">נוספו על גבי השלב הראשון. בתיק הבניין בעירייה אין היתר בנייה רשום. הוצאו רק תכניות מתאר (44 משנת 1941, 1245 משנת 1971) שקבעו שימוש מסחרי בלבד.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-year">2005 ואילך</div>
+      <div class="phase-title">חלוקת הדירות הפיראטית</div>
+      <div class="phase-detail">חברת הניהול "פירר" מובילה שינויי תב"ע מתעשייה למגורים. נכסים מחולקים לחמש-שש דירות, כל חלל. תשתיות הביוב, החשמל והמים נשארות במידה של נכס אחד.</div>
+    </div>
+  </div>
+
+  <h2>חריגות מהתכנית המקורית</h2>
+  <div class="deviation">
+    <strong>קומה מפולשת סגורה.</strong> בתכנית 1968 נקבעה קומה פתוחה על עמודים. בפועל המפלס נסגר ומולא בחללים בלתי-מתוכננים.
+  </div>
+  <div class="deviation">
+    <strong>חלוקת דירות פיראטית.</strong> משטחים שלמים בקומות 3-5 שייעודם תעשייתי-מסחרי הוסבו ל-5–6 דירות מגורים, עם תשתיות בלתי-מתאימות. ההסבה בוצעה בעידוד חברת הניהול ומול עין עיריית תל אביב.
+  </div>
+
+</div>
+
+<div id="info">גרור לסיבוב · גלגלת לזום · רחף על קומה לפרטים</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ================================
+   SCENE / CAMERA / RENDER
+   ================================ */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0e0e12);
+scene.fog = new THREE.Fog(0x0e0e12, 70, 220);
+
+const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 600);
+const INITIAL_CAM = new THREE.Vector3(50, 32, 55);
+camera.position.copy(INITIAL_CAM);
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 11, 0);
+controls.maxPolarAngle = Math.PI * 0.49;
+controls.minDistance = 18;
+controls.maxDistance = 130;
+
+/* ================================
+   LIGHTS
+   ================================ */
+scene.add(new THREE.AmbientLight(0xffffff, 0.42));
+
+const sun = new THREE.DirectionalLight(0xffe6c0, 0.95);
+sun.position.set(35, 55, 28);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -55; sun.shadow.camera.right = 55;
+sun.shadow.camera.top = 55; sun.shadow.camera.bottom = -55;
+sun.shadow.camera.near = 1; sun.shadow.camera.far = 150;
+sun.shadow.bias = -0.0005;
+scene.add(sun);
+
+const fill = new THREE.DirectionalLight(0x88aacc, 0.32);
+fill.position.set(-30, 25, -25);
+scene.add(fill);
+
+const skyHemi = new THREE.HemisphereLight(0xa0c0e0, 0x2a2a30, 0.25);
+scene.add(skyHemi);
+
+/* ================================
+   BUILDING DIMENSIONS (derived from file evidence)
+   ================================ */
+const NS_LEN  = 30;   // צפון-דרום (לאורך הפסאז') — הערכה משטחי קומה 2 מהחוזים
+const WEST_W  = 12;   // אגף מערבי
+const PASS_W  = 3;    // פסאז' פנימי
+const EAST_W  = 10;   // אגף מזרחי — אזור ההריסה (במפורש: "ברוחב של כ-10 מטרים")
+const TOTAL_W = WEST_W + PASS_W + EAST_W; // 25 מ'
+
+const X_WEST = -(PASS_W/2 + WEST_W/2);  // -7.5
+const X_EAST = +(PASS_W/2 + EAST_W/2);  // +6.5
+
+const FH = {
+  basement: 2.8, ground: 3.6, gallery: 2.5,
+  f1: 3.0, f2: 3.0, f3: 3.0, f4: 3.0, f5: 3.0,
+};
+
+let _y = 0;
+const Y = {
+  basement_bot: -FH.basement, basement_top: 0,
+  ground_bot: 0, ground_top: FH.ground,
+};
+_y = FH.ground;
+Y.gallery_bot = _y; _y += FH.gallery; Y.gallery_top = _y;
+Y.f1_bot = _y; _y += FH.f1; Y.f1_top = _y;
+Y.f2_bot = _y; _y += FH.f2; Y.f2_top = _y;
+Y.f3_bot = _y; _y += FH.f3; Y.f3_top = _y;
+Y.f4_bot = _y; _y += FH.f4; Y.f4_top = _y;
+Y.f5_bot = _y; _y += FH.f5; Y.f5_top = _y;
+Y.roof = _y;
+
+/* ================================
+   GROUND & CONTEXT
+   ================================ */
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(220, 220),
+  new THREE.MeshStandardMaterial({color:0x252528, roughness:1})
+);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// סמטת השוק (south side in our coordinate system, +Z) — סמטה צרה
+const SOUK_DEPTH = 9;
+const souk = new THREE.Mesh(
+  new THREE.PlaneGeometry(70, SOUK_DEPTH),
+  new THREE.MeshStandardMaterial({color:0x2c2c34, roughness:1})
+);
+souk.rotation.x = -Math.PI/2;
+souk.position.set(0, 0.01, NS_LEN/2 + SOUK_DEPTH/2);
+souk.receiveShadow = true;
+scene.add(souk);
+
+// מדרכה לסמטת השוק (חלק בהיר ליד הבניין)
+const soukWalk = new THREE.Mesh(
+  new THREE.PlaneGeometry(TOTAL_W + 4, 2.2),
+  new THREE.MeshStandardMaterial({color:0x3a3a40, roughness:1})
+);
+soukWalk.rotation.x = -Math.PI/2;
+soukWalk.position.set(0, 0.02, NS_LEN/2 + 1.1);
+scene.add(soukWalk);
+
+// דרך יפו (north side in our coordinate system, -Z) — רחוב ראשי רחב
+const YAFO_DEPTH = 22;
+const yafoRoad = new THREE.Mesh(
+  new THREE.PlaneGeometry(95, YAFO_DEPTH),
+  new THREE.MeshStandardMaterial({color:0x33333a, roughness:0.95})
+);
+yafoRoad.rotation.x = -Math.PI/2;
+yafoRoad.position.set(0, 0.01, -NS_LEN/2 - YAFO_DEPTH/2);
+yafoRoad.receiveShadow = true;
+scene.add(yafoRoad);
+
+// מדרכה רחבה לדרך יפו
+const yafoWalk = new THREE.Mesh(
+  new THREE.PlaneGeometry(TOTAL_W + 6, 4.5),
+  new THREE.MeshStandardMaterial({color:0x42424a, roughness:1})
+);
+yafoWalk.rotation.x = -Math.PI/2;
+yafoWalk.position.set(0, 0.02, -NS_LEN/2 - 2.25);
+scene.add(yafoWalk);
+
+// סימון נתיבים על דרך יפו (קווים לבנים מקווקווים)
+function roadLanes() {
+  const lineMat = new THREE.MeshBasicMaterial({color:0x666});
+  for (let x = -40; x <= 40; x += 4) {
+    const dash = new THREE.Mesh(
+      new THREE.PlaneGeometry(2, 0.18),
+      lineMat
+    );
+    dash.rotation.x = -Math.PI/2;
+    dash.position.set(x, 0.03, -NS_LEN/2 - 11);
+    scene.add(dash);
+  }
+}
+roadLanes();
+
+// בתים שכנים (קונטקסט)
+function neighbor(x, w, h, d, color) {
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshStandardMaterial({color, roughness:0.92})
+  );
+  m.position.set(x, h/2, 0);
+  m.castShadow = true; m.receiveShadow = true;
+  scene.add(m);
+  // simple window pattern
+  const winMat = new THREE.MeshStandardMaterial({color:0x2a3340, roughness:0.5});
+  for (let yy = 2; yy < h - 1; yy += 2.8) {
+    for (let zz = -d/2 + 2; zz < d/2 - 1; zz += 2.5) {
+      const win = new THREE.Mesh(
+        new THREE.BoxGeometry(0.1, 1.2, 1.0),
+        winMat
+      );
+      win.position.set(x + (x < 0 ? w/2 + 0.05 : -w/2 - 0.05), yy, zz);
+      scene.add(win);
+    }
+  }
+  return m;
+}
+neighbor(-(TOTAL_W/2 + 13), 22, 19, 32, 0x6b6155);
+neighbor(+(TOTAL_W/2 + 14), 24, 17, 34, 0x756a5a);
+
+/* ================================
+   BUILDING — MATERIALS
+   ================================ */
+const matCore = new THREE.MeshStandardMaterial({color:0xe4d5b8, roughness:0.88});
+const matShop = new THREE.MeshStandardMaterial({color:0xd4a13a, roughness:0.7, metalness:0.05});
+const matGallery = new THREE.MeshStandardMaterial({color:0xc9b08a, roughness:0.82});
+const matRoofBlock = new THREE.MeshStandardMaterial({color:0xb8a37e, roughness:0.98});
+const matBasement = new THREE.MeshStandardMaterial({
+  color:0x5a4a3a, roughness:1, transparent:true, opacity:0.55,
+});
+const matDanger = new THREE.MeshStandardMaterial({
+  color:0x8a4a4a, roughness:0.88,
+  emissive:0x220000, emissiveIntensity:1.0
+});
+const matPassageGlow = new THREE.MeshStandardMaterial({
+  color:0x3d6a82, roughness:0.9,
+  transparent:true, opacity:0.0,
+  emissive:0x1a3a4a, emissiveIntensity:0.6
+});
+const matWindow = new THREE.MeshStandardMaterial({
+  color:0x556677, roughness:0.3, metalness:0.3,
+  emissive:0x223344, emissiveIntensity:0.2
+});
+const matShutter = new THREE.MeshStandardMaterial({color:0x6a5a3a, roughness:0.85});
+const matBalcony = new THREE.MeshStandardMaterial({color:0xaa9988, roughness:0.92});
+const matRail = new THREE.MeshStandardMaterial({color:0x3a3a3a, roughness:0.4, metalness:0.6});
+const matFrame = new THREE.MeshStandardMaterial({color:0x1a1a1f, roughness:0.5, metalness:0.4});
+
+const bldg = new THREE.Group();
+scene.add(bldg);
+
+const dangerMeshes = []; // יאוכלסו ע"י כל אגף מזרחי
+const allBldgMeshes = [];
+
+function box(x, yBot, h, w, d, mat, name) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.position.set(x, yBot + h/2, 0);
+  m.castShadow = true; m.receiveShadow = true;
+  m.userData.name = name;
+  bldg.add(m);
+  allBldgMeshes.push(m);
+  return m;
+}
+
+/* === מרתף === */
+box(X_WEST, Y.basement_bot, FH.basement, WEST_W, NS_LEN, matBasement, 'basement-w');
+const basementE = box(X_EAST, Y.basement_bot, FH.basement, EAST_W, NS_LEN, matBasement, 'basement-e');
+box(0,      Y.basement_bot, FH.basement, PASS_W, NS_LEN, matBasement, 'basement-p');
+dangerMeshes.push(basementE);
+
+/* === קומת קרקע (חנויות, פסאז' פתוח) === */
+box(X_WEST, Y.ground_bot, FH.ground, WEST_W, NS_LEN, matShop, 'ground-w');
+const groundE = box(X_EAST, Y.ground_bot, FH.ground, EAST_W, NS_LEN, matShop, 'ground-e');
+dangerMeshes.push(groundE);
+// אין מסה בפסאז' בקומת קרקע — זה הפתח
+
+/* === גלריה (מזנין) === */
+box(X_WEST, Y.gallery_bot, FH.gallery, WEST_W, NS_LEN, matGallery, 'gallery-w');
+const galleryE = box(X_EAST, Y.gallery_bot, FH.gallery, EAST_W, NS_LEN, matGallery, 'gallery-e');
+box(0,      Y.gallery_bot, FH.gallery, PASS_W, NS_LEN, matGallery, 'gallery-p'); // מעל הפסאז' מקורה
+dangerMeshes.push(galleryE);
+
+/* === קומות 1-5 (העליונות) === */
+const upperKeys = ['f1','f2','f3','f4','f5'];
+upperKeys.forEach(f => {
+  const yBot = Y[f+'_bot'];
+  const h = FH[f];
+  box(X_WEST, yBot, h, WEST_W, NS_LEN, matCore, 'west-'+f);
+  const e = box(X_EAST, yBot, h, EAST_W, NS_LEN, matDanger, 'east-'+f);
+  box(0,      yBot, h, PASS_W, NS_LEN, matCore, 'pass-'+f);
+  dangerMeshes.push(e);
+});
+
+/* === גגון עליון === */
+const parapet = new THREE.Mesh(
+  new THREE.BoxGeometry(TOTAL_W + 0.4, 0.6, NS_LEN + 0.3),
+  matCore
+);
+parapet.position.set(0, Y.roof + 0.3, 0);
+parapet.castShadow = true;
+bldg.add(parapet);
+
+/* === סקיילייט מרכזי על הגג (נראה בתצלום העל) === */
+const skylight = new THREE.Mesh(
+  new THREE.BoxGeometry(PASS_W - 0.3, 0.18, NS_LEN * 0.55),
+  new THREE.MeshStandardMaterial({
+    color: 0xa8c8e0, transparent: true, opacity: 0.6,
+    emissive: 0x4a6a82, emissiveIntensity: 0.25,
+    roughness: 0.2, metalness: 0.3
+  })
+);
+skylight.position.set(0, Y.roof + 0.7, 0);
+bldg.add(skylight);
+// פסי מתכת על הסקיילייט
+for (let z = -NS_LEN*0.27; z <= NS_LEN*0.27; z += 1.6) {
+  const bar = new THREE.Mesh(
+    new THREE.BoxGeometry(PASS_W - 0.2, 0.08, 0.08),
+    matFrame
+  );
+  bar.position.set(0, Y.roof + 0.78, z);
+  bldg.add(bar);
+}
+
+/* === כתם רטיבות אמורפי בפינה הדרום-מזרחית === */
+/* "מדי שנה הופך כמו ספוג" — ציטוט מהכתבה */
+
+// טקסטורה דינמית של כתם אורגני
+function makeMoistureTexture(w, h, vertical = false) {
+  const cv = document.createElement('canvas');
+  cv.width = 256; cv.height = vertical ? 512 : 256;
+  const cx = cv.getContext('2d');
+  cx.clearRect(0, 0, cv.width, cv.height);
+
+  // מספר כתמים אליפטיים חופפים — נותן תחושה אורגנית
+  const blobs = vertical ? [
+    {x: 130, y: 30,  rx: 50, ry: 35, a: 0.85},
+    {x: 110, y: 90,  rx: 60, ry: 50, a: 0.9},
+    {x: 140, y: 160, rx: 55, ry: 60, a: 0.85},
+    {x: 100, y: 240, rx: 48, ry: 70, a: 0.75},
+    {x: 130, y: 320, rx: 40, ry: 55, a: 0.65},
+    {x: 110, y: 400, rx: 32, ry: 45, a: 0.5},
+    {x: 125, y: 470, rx: 22, ry: 28, a: 0.35},
+    // satellite drips
+    {x: 80,  y: 200, rx: 18, ry: 12, a: 0.5},
+    {x: 175, y: 280, rx: 14, ry: 22, a: 0.45},
+    {x: 90,  y: 360, rx: 12, ry: 18, a: 0.4},
+  ] : [
+    {x: 128, y: 90,  rx: 70, ry: 55, a: 0.9},
+    {x: 100, y: 145, rx: 75, ry: 65, a: 0.85},
+    {x: 165, y: 165, rx: 55, ry: 60, a: 0.8},
+    {x: 80,  y: 105, rx: 45, ry: 35, a: 0.7},
+    {x: 195, y: 110, rx: 35, ry: 45, a: 0.65},
+    {x: 130, y: 215, rx: 40, ry: 30, a: 0.55},
+    {x: 60,  y: 175, rx: 22, ry: 18, a: 0.5},
+    {x: 215, y: 175, rx: 18, ry: 22, a: 0.4},
+  ];
+
+  blobs.forEach(b => {
+    cx.globalAlpha = b.a;
+    const grad = cx.createRadialGradient(b.x, b.y, 0, b.x, b.y, Math.max(b.rx, b.ry));
+    grad.addColorStop(0, '#1a0e08');
+    grad.addColorStop(0.55, '#3a2418');
+    grad.addColorStop(0.85, 'rgba(74,42,24,0.4)');
+    grad.addColorStop(1, 'rgba(74,42,24,0)');
+    cx.fillStyle = grad;
+    cx.beginPath();
+    cx.ellipse(b.x, b.y, b.rx, b.ry, Math.random() * Math.PI, 0, Math.PI*2);
+    cx.fill();
+  });
+
+  // טפטופים אנכיים אקראיים (רק לטקסטורה אנכית)
+  if (vertical) {
+    cx.globalAlpha = 0.55;
+    cx.fillStyle = '#1a0e08';
+    for (let i = 0; i < 6; i++) {
+      const x = 70 + Math.random() * 120;
+      const yStart = 80 + Math.random() * 200;
+      const len = 30 + Math.random() * 80;
+      cx.beginPath();
+      cx.ellipse(x, yStart, 3 + Math.random() * 2, len/2, 0, 0, Math.PI*2);
+      cx.fill();
+    }
+  }
+
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  return tex;
+}
+
+function moistureStain() {
+  // כתם על הגג בפינה הדרום-מזרחית — אמורפי
+  const roofStain = new THREE.Mesh(
+    new THREE.PlaneGeometry(6.5, 6),
+    new THREE.MeshStandardMaterial({
+      map: makeMoistureTexture(256, 256, false),
+      transparent: true, alphaTest: 0.02,
+      roughness: 1, depthWrite: false
+    })
+  );
+  roofStain.rotation.x = -Math.PI/2;
+  roofStain.position.set(X_EAST + EAST_W/2 - 2.2, Y.roof + 0.63, NS_LEN/2 - 2.8);
+  bldg.add(roofStain);
+
+  // פס רטיבות יורד אורגני — חזית דרום (פינת מזרח)
+  const streakTexS = makeMoistureTexture(0, 0, true);
+  const streakS = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.6, Y.roof - Y.f2_bot - 0.2),
+    new THREE.MeshStandardMaterial({
+      map: streakTexS,
+      transparent: true, alphaTest: 0.02,
+      roughness: 1, depthWrite: false
+    })
+  );
+  streakS.position.set(X_EAST + EAST_W/2 - 1.8, (Y.roof + Y.f2_bot)/2, NS_LEN/2 + 0.09);
+  bldg.add(streakS);
+
+  // פס רטיבות יורד — חזית מזרח (פינה דרומית)
+  const streakTexE = makeMoistureTexture(0, 0, true);
+  const streakE = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.2, Y.roof - Y.f2_bot - 0.2),
+    new THREE.MeshStandardMaterial({
+      map: streakTexE,
+      transparent: true, alphaTest: 0.02,
+      roughness: 1, depthWrite: false
+    })
+  );
+  streakE.rotation.y = Math.PI/2;
+  streakE.position.set(X_EAST + EAST_W/2 + 0.09, (Y.roof + Y.f2_bot)/2, NS_LEN/2 - 1.6);
+  bldg.add(streakE);
+}
+moistureStain();
+
+/* === הדגשת קומה מפולשת === */
+/* קומת הביניים תוכננה ב-1968 כפתוחה על עמודים — בפועל נסגרה */
+const pilotisGlow = new THREE.Mesh(
+  new THREE.BoxGeometry(TOTAL_W + 0.5, FH.gallery + 0.3, NS_LEN + 0.5),
+  new THREE.MeshStandardMaterial({
+    color: 0xd99540, transparent: true, opacity: 0.0,
+    emissive: 0xff8c20, emissiveIntensity: 0.0,
+    side: THREE.DoubleSide
+  })
+);
+pilotisGlow.position.set(0, Y.gallery_bot + (FH.gallery + 0.3)/2 - 0.15, 0);
+scene.add(pilotisGlow);
+
+/* ================================
+   FACADE DETAILS
+   ================================ */
+
+/* קופי חלונות חנות בקומת קרקע (חזית דרום, דרך יפו) */
+function shopFronts() {
+  const z = NS_LEN/2 + 0.06;
+  const frameH = FH.ground - 0.8;
+  // חזית מערבית: 4 חנויות
+  const wPositions = [-13, -9.7, -6.4, -3.1];
+  wPositions.forEach(x => {
+    // window glass (lit)
+    const glass = new THREE.Mesh(
+      new THREE.BoxGeometry(2.8, frameH, 0.06),
+      new THREE.MeshStandardMaterial({
+        color:0xcce8ff, transparent:true, opacity:0.55,
+        emissive:0x88aacc, emissiveIntensity:0.4
+      })
+    );
+    glass.position.set(x, Y.ground_bot + frameH/2 + 0.25, z);
+    bldg.add(glass);
+    // mullion
+    const mul = new THREE.Mesh(
+      new THREE.BoxGeometry(0.12, frameH, 0.18),
+      matFrame
+    );
+    mul.position.set(x + 1.4, Y.ground_bot + frameH/2 + 0.25, z + 0.01);
+    bldg.add(mul);
+  });
+  // חזית מזרחית: 3-4 חנויות
+  const ePositions = [3.2, 6.5, 9.8];
+  ePositions.forEach(x => {
+    const glass = new THREE.Mesh(
+      new THREE.BoxGeometry(2.8, frameH, 0.06),
+      new THREE.MeshStandardMaterial({
+        color:0xcce8ff, transparent:true, opacity:0.55,
+        emissive:0x88aacc, emissiveIntensity:0.4
+      })
+    );
+    glass.position.set(x, Y.ground_bot + frameH/2 + 0.25, z);
+    bldg.add(glass);
+    const mul = new THREE.Mesh(
+      new THREE.BoxGeometry(0.12, frameH, 0.18),
+      matFrame
+    );
+    mul.position.set(x + 1.4, Y.ground_bot + frameH/2 + 0.25, z + 0.01);
+    bldg.add(mul);
+  });
+}
+shopFronts();
+
+/* בליטה אופקית מעל קומת קרקע (האלמנט הקונסולי שהתפרק 2018) */
+function cantilever() {
+  const w = TOTAL_W + 0.6;
+  const h = 0.45;
+  const d = 0.6;
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshStandardMaterial({color:0xb59065, roughness:0.85})
+  );
+  m.position.set(0, Y.ground_top - 0.1, NS_LEN/2 + 0.3);
+  m.castShadow = true;
+  bldg.add(m);
+}
+cantilever();
+
+/* רצועת חלונות גלריה — חלונות ריבועיים קטנים */
+function galleryWindows() {
+  const z = NS_LEN/2 + 0.06;
+  const yMid = Y.gallery_bot + FH.gallery/2;
+  for (let x = -13.5; x <= 11.5; x += 1.6) {
+    if (Math.abs(x) < 1.5) continue;
+    const w = new THREE.Mesh(
+      new THREE.BoxGeometry(0.8, 0.85, 0.08),
+      matWindow
+    );
+    w.position.set(x, yMid, z);
+    bldg.add(w);
+  }
+}
+galleryWindows();
+
+/* חלונות הקומות העליונות + תריסים */
+function upperWindows() {
+  ['f1','f2','f3','f4','f5'].forEach(f => {
+    const yMid = Y[f+'_bot'] + FH[f]/2;
+    // חזית דרום (יפו)
+    for (let x = -13; x <= 11; x += 2.4) {
+      if (Math.abs(x) < 1.5) continue;
+      const w = new THREE.Mesh(
+        new THREE.BoxGeometry(1.5, 1.6, 0.1),
+        matWindow
+      );
+      w.position.set(x, yMid, NS_LEN/2 + 0.05);
+      bldg.add(w);
+      // תריס
+      const sh = new THREE.Mesh(
+        new THREE.BoxGeometry(1.7, 0.18, 0.05),
+        matShutter
+      );
+      sh.position.set(x, yMid + 0.95, NS_LEN/2 + 0.07);
+      bldg.add(sh);
+    }
+    // חזית צפון (סמטה)
+    for (let x = -12; x <= 11; x += 2.6) {
+      if (Math.abs(x) < 1.5) continue;
+      const w = new THREE.Mesh(
+        new THREE.BoxGeometry(1.3, 1.4, 0.1),
+        matWindow
+      );
+      w.position.set(x, yMid, -NS_LEN/2 - 0.05);
+      bldg.add(w);
+    }
+  });
+}
+upperWindows();
+
+/* (חדרי גג הוסרו — נשאר רק הסקיילייט) */
+
+/* ================================
+   PASSAGE INDICATOR (toggleable glow)
+   ================================ */
+const passageGlow = new THREE.Mesh(
+  new THREE.BoxGeometry(PASS_W - 0.1, FH.ground - 0.2, NS_LEN + 0.4),
+  new THREE.MeshStandardMaterial({
+    color:0x3d6a82, transparent:true, opacity:0.0,
+    emissive:0x4488aa, emissiveIntensity:0.0,
+    side: THREE.DoubleSide
+  })
+);
+passageGlow.position.set(0, Y.ground_bot + (FH.ground - 0.2)/2, 0);
+scene.add(passageGlow);
+
+/* ================================
+   COLLAPSE MARKER (SE corner, floor 2)
+   ================================ */
+// פינה דרום-מזרחית = max X, max Z
+const collapseX = X_EAST + EAST_W/2 - 1.2;
+const collapseY = Y.f2_bot + FH.f2/2;
+const collapseZ = NS_LEN/2 - 1.5;
+
+const collapseGroup = new THREE.Group();
+const collapseSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.7, 24, 16),
+  new THREE.MeshStandardMaterial({
+    color:0xff5500, emissive:0xff3300, emissiveIntensity:1.0
+  })
+);
+collapseGroup.add(collapseSphere);
+
+// קו אנכי שמתאר את ציר העמוד שקרס (קומה 2 ומעלה)
+const colHeight = Y.roof - Y.f2_bot;
+const collapseColumn = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.18, 0.18, colHeight, 12),
+  new THREE.MeshStandardMaterial({
+    color:0xff5500, emissive:0xff3300, emissiveIntensity:0.8,
+    transparent:true, opacity:0.7
+  })
+);
+collapseColumn.position.set(0, colHeight/2 - (collapseY - Y.f2_bot), 0);
+collapseGroup.add(collapseColumn);
+
+collapseGroup.position.set(collapseX, collapseY, collapseZ);
+collapseGroup.visible = false;
+scene.add(collapseGroup);
+
+/* ================================
+   DEMOLITION ZONE OUTLINE
+   ================================ */
+const demoOutline = new THREE.Mesh(
+  new THREE.BoxGeometry(EAST_W + 0.5, Y.f5_top + 0.5, NS_LEN + 0.5),
+  new THREE.MeshBasicMaterial({color:0xff3030, wireframe:true, transparent:true, opacity:0.0})
+);
+demoOutline.position.set(X_EAST, Y.f5_top/2, 0);
+scene.add(demoOutline);
+
+/* ================================
+   SCENE LABELS (canvas sprites)
+   ================================ */
+function makeLabel(text, x, y, z, opts={}) {
+  const {scale=1, color='#f5d76e', bg='rgba(8,8,12,0.78)', size=28, weight='bold'} = opts;
+  const cv = document.createElement('canvas');
+  cv.width = 280; cv.height = 64;
+  const cx = cv.getContext('2d');
+  cx.fillStyle = bg;
+  cx.fillRect(0, 0, cv.width, cv.height);
+  cx.fillStyle = color;
+  cx.font = `${weight} ${size}px sans-serif`;
+  cx.textAlign = 'right';
+  cx.textBaseline = 'middle';
+  cx.fillText(text, cv.width - 14, cv.height/2 + 2);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:tex, depthTest:false, transparent:true}));
+  s.scale.set(4.2*scale, 1*scale, 1);
+  s.position.set(x, y, z);
+  scene.add(s);
+  return s;
+}
+
+const labelX = -(TOTAL_W/2 + 4.5);
+makeLabel('מרתף · מקלט',  labelX, Y.basement_bot + FH.basement/2, 0, {scale:1.0, color:'#aac'});
+makeLabel('קומת חנויות', labelX, Y.ground_bot + FH.ground/2,    0, {scale:1.05, color:'#fc9'});
+makeLabel('גלריה',         labelX, Y.gallery_bot + FH.gallery/2,  0, {scale:0.95, color:'#fc9'});
+makeLabel('קומה 1',        labelX, Y.f1_bot + FH.f1/2, 0);
+makeLabel('קומה 2 · קריסה', labelX, Y.f2_bot + FH.f2/2, 0, {color:'#ff8a8a', scale:1.1});
+makeLabel('קומה 3',        labelX, Y.f3_bot + FH.f3/2, 0);
+makeLabel('קומה 4',        labelX, Y.f4_bot + FH.f4/2, 0);
+makeLabel('קומה 5',        labelX, Y.f5_bot + FH.f5/2, 0);
+
+makeLabel('סמטת השוק', 0, 1.3, NS_LEN/2 + 6,    {scale:1.2, color:'#9adfff'});
+makeLabel('דרך יפו',     0, 1.3, -NS_LEN/2 - 8,   {scale:1.5, color:'#9adfff'});
+makeLabel('פסאז\'',      0, Y.ground_bot + FH.ground + 0.3, NS_LEN/2 + 2.5, {scale:1.0, color:'#9adfff'});
+
+// תווית קומה מפולשת — עם חץ
+makeLabel('קומה מפולשת · נסגרה', X_EAST + EAST_W/2 + 6, Y.gallery_bot + FH.gallery/2, -NS_LEN/2 - 2,
+  {scale:1.15, color:'#ffd080', bg:'rgba(40,28,12,0.85)'});
+
+// תווית רטיבות
+makeLabel('רטיבות · 10 שנים', X_EAST + EAST_W/2 + 5, Y.f3_bot, NS_LEN/2 + 4,
+  {scale:1.1, color:'#ffb088', bg:'rgba(40,18,12,0.85)'});
+
+/* ================================
+   COMPASS
+   ================================ */
+function compass() {
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = 128;
+  const cx = cv.getContext('2d');
+  cx.fillStyle = 'rgba(8,8,12,0.6)';
+  cx.beginPath(); cx.arc(64, 64, 60, 0, Math.PI*2); cx.fill();
+  cx.strokeStyle = '#666'; cx.lineWidth = 2;
+  cx.stroke();
+  cx.fillStyle = '#9adfff'; cx.font = 'bold 18px sans-serif';
+  cx.textAlign = 'center';
+  cx.fillText('יפו', 64, 24);    // -Z = דרך יפו (רחוב ראשי)
+  cx.fillStyle = '#aaa';
+  cx.fillText('שוק', 64, 110);   // +Z = סמטת השוק
+  cx.fillText('מע', 22, 70);     // -X = מערב
+  cx.fillText('מז', 110, 70);    // +X = מזרח (אזור הריסה)
+  const tex = new THREE.CanvasTexture(cv);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:tex, depthTest:false, transparent:true}));
+  s.scale.set(5,5,1);
+  s.position.set(-(TOTAL_W/2 + 14), 5, NS_LEN/2 + 5);
+  scene.add(s);
+}
+compass();
+
+/* ================================
+   UI BUTTONS
+   ================================ */
+const btnPassage = document.getElementById('b-passage');
+const btnPilotis = document.getElementById('b-pilotis');
+const btnMoisture = document.getElementById('b-moisture');
+const btnDemo = document.getElementById('b-demo');
+const btnCollapse = document.getElementById('b-collapse');
+const btnXray = document.getElementById('b-xray');
+const btnReset = document.getElementById('b-reset');
+
+let stPassage = false, stDemo = false, stCollapse = false, stXray = false;
+let stPilotis = false, stMoisture = false;
+
+btnPassage.onclick = () => {
+  stPassage = !stPassage;
+  btnPassage.classList.toggle('active', stPassage);
+};
+btnPilotis.onclick = () => {
+  stPilotis = !stPilotis;
+  btnPilotis.classList.toggle('active', stPilotis);
+};
+btnMoisture.onclick = () => {
+  stMoisture = !stMoisture;
+  btnMoisture.classList.toggle('active', stMoisture);
+};
+btnDemo.onclick = () => {
+  stDemo = !stDemo;
+  btnDemo.classList.toggle('active', stDemo);
+};
+btnCollapse.onclick = () => {
+  stCollapse = !stCollapse;
+  collapseGroup.visible = stCollapse;
+  btnCollapse.classList.toggle('active', stCollapse);
+  if (stCollapse) {
+    // החלקה למצלמה לפינה
+    const target = new THREE.Vector3(collapseX, collapseY, collapseZ);
+    flyTo(new THREE.Vector3(collapseX + 25, collapseY + 6, collapseZ + 18), target);
+  }
+};
+btnXray.onclick = () => {
+  stXray = !stXray;
+  btnXray.classList.toggle('active', stXray);
+  allBldgMeshes.forEach(m => {
+    if (!m.userData.origOpacity) m.userData.origOpacity = m.material.opacity;
+    m.material.transparent = true;
+    m.material.opacity = stXray ? 0.32 : (m.userData.name?.startsWith('basement') ? 0.55 : 1.0);
+    m.material.needsUpdate = true;
+  });
+};
+btnReset.onclick = () => flyTo(INITIAL_CAM.clone(), new THREE.Vector3(0, 11, 0));
+
+/* ================================
+   CAMERA FLY-TO
+   ================================ */
+let flyState = null;
+function flyTo(toPos, toTarget, dur = 900) {
+  flyState = {
+    fromPos: camera.position.clone(),
+    toPos: toPos.clone(),
+    fromTarget: controls.target.clone(),
+    toTarget: toTarget.clone(),
+    t0: performance.now(), dur
+  };
+}
+function flyTick(now) {
+  if (!flyState) return;
+  const t = Math.min(1, (now - flyState.t0) / flyState.dur);
+  const e = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2)/2;
+  camera.position.lerpVectors(flyState.fromPos, flyState.toPos, e);
+  controls.target.lerpVectors(flyState.fromTarget, flyState.toTarget, e);
+  if (t >= 1) flyState = null;
+}
+
+/* ================================
+   ANIMATION LOOP
+   ================================ */
+let t0 = 0;
+function animate(now) {
+  requestAnimationFrame(animate);
+  const t = (now || 0) * 0.001;
+
+  // Pulsing collapse marker
+  if (collapseGroup.visible) {
+    const p = 1 + 0.35 * Math.sin(t * 3.5);
+    collapseSphere.scale.setScalar(p);
+    collapseSphere.material.emissiveIntensity = 0.7 + 0.4 * Math.sin(t * 3.5);
+    collapseColumn.material.opacity = 0.55 + 0.25 * Math.sin(t * 2.5);
+  }
+
+  // Passage glow
+  const targOpP = stPassage ? 0.55 : 0.0;
+  const targEmP = stPassage ? (0.7 + 0.3 * Math.sin(t * 2)) : 0.0;
+  passageGlow.material.opacity += (targOpP - passageGlow.material.opacity) * 0.1;
+  passageGlow.material.emissiveIntensity += (targEmP - passageGlow.material.emissiveIntensity) * 0.1;
+
+  // Pilotis glow (gallery level)
+  const targOpPi = stPilotis ? 0.42 : 0.0;
+  const targEmPi = stPilotis ? (0.85 + 0.4 * Math.sin(t * 2.2)) : 0.0;
+  pilotisGlow.material.opacity += (targOpPi - pilotisGlow.material.opacity) * 0.1;
+  pilotisGlow.material.emissiveIntensity += (targEmPi - pilotisGlow.material.emissiveIntensity) * 0.1;
+
+  // Moisture pulse (when active, moisture stains pulse darker)
+  bldg.children.forEach(o => {
+    if (o.material && o.material.map && o.material.map.image &&
+        o.material.map.image.tagName === 'CANVAS' &&
+        o.material.alphaTest === 0.02) {
+      const targIntensity = stMoisture ? (0.85 + 0.25 * Math.sin(t * 2)) : 0.55;
+      // pulse via opacity-equivalent
+      o.material.color = o.material.color || new THREE.Color(1,1,1);
+      const targOp = stMoisture ? 1.0 : 0.7;
+      // use property to fade
+      if (!o.userData._curOp) o.userData._curOp = 0.7;
+      o.userData._curOp += (targOp - o.userData._curOp) * 0.1;
+      o.material.opacity = o.userData._curOp;
+    }
+  });
+
+  // Demolition zone outline
+  const targOpD = stDemo ? (0.7 + 0.25 * Math.sin(t * 2.5)) : 0.0;
+  demoOutline.material.opacity += (targOpD - demoOutline.material.opacity) * 0.12;
+  // אגף מזרחי — אדמומיות
+  dangerMeshes.forEach(m => {
+    if (m.material === matDanger || m === groundE || m === galleryE || m === basementE) {
+      const targEmInt = stDemo ? (1.6 + 0.6 * Math.sin(t * 2.5)) : 1.0;
+      m.material.emissiveIntensity += (targEmInt - m.material.emissiveIntensity) * 0.1;
+    }
+  });
+
+  flyTick(performance.now());
+  controls.update();
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(animate);
+
+/* ================================
+   RESIZE
+   ================================ */
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ================================
+   HOVER DETECTION (פשוט — סמן רחף)
+   ================================ */
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const tooltip = document.createElement('div');
+tooltip.style.cssText = `
+  position:fixed; padding:6px 10px; background:rgba(8,8,12,0.92);
+  border:1px solid #444; color:#eee; font-size:12px; pointer-events:none;
+  border-radius:3px; z-index:100; display:none; max-width:240px;
+  font-family:inherit;
+`;
+document.body.appendChild(tooltip);
+
+const partInfo = {
+  'basement-w': 'מרתף + מקלט · אגף מערבי',
+  'basement-e': 'מרתף · אגף מזרחי (אזור הריסה)',
+  'basement-p': 'מרתף · מתחת לפסאז\'',
+  'ground-w':   'קומת קרקע · אגף מערבי · חנויות (CARENO, BLUE-WHITE ORIENT...)',
+  'ground-e':   'קומת קרקע · אגף מזרחי · חנויות (אזור הריסה)',
+  'gallery-w':  'גלריה · אגף מערבי · יחידות 28-44 מ"ר',
+  'gallery-e':  'גלריה · אגף מזרחי (אזור הריסה)',
+  'gallery-p':  'גלריה מעל הפסאז\' (מקורה)',
+  'west-f1':    'קומה 1 · אגף מערבי',
+  'east-f1':    'קומה 1 · אגף מזרחי · אזור הריסה',
+  'pass-f1':    'קומה 1 · מעל הפסאז\'',
+  'west-f2':    'קומה 2 · אגף מערבי · TANGA LINGERIE 621 מ"ר',
+  'east-f2':    'קומה 2 · אגף מזרחי · ⚠ נקודת קריסת העמוד',
+  'pass-f2':    'קומה 2 · מעל הפסאז\'',
+  'west-f3':    'קומה 3 · אגף מערבי · מלכה-טקס, פרידמן, פרמינגר',
+  'east-f3':    'קומה 3 · אגף מזרחי · אזור הריסה (תלונה 25/5/2011)',
+  'pass-f3':    'קומה 3 · מעל הפסאז\'',
+  'west-f4':    'קומה 4 · אגף מערבי · ~10 יחידות',
+  'east-f4':    'קומה 4 · אגף מזרחי · אזור הריסה',
+  'pass-f4':    'קומה 4 · מעל הפסאז\'',
+  'west-f5':    'קומה 5 · אגף מערבי · פייר גליו 283 מ"ר',
+  'east-f5':    'קומה 5 · אגף מזרחי · אזור הריסה (קומה עליונה)',
+  'pass-f5':    'קומה 5 · מעל הפסאז\'',
+};
+
+addEventListener('pointermove', (e) => {
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(allBldgMeshes, false);
+  if (hits.length > 0) {
+    const name = hits[0].object.userData.name;
+    const info = partInfo[name];
+    if (info) {
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY + 14) + 'px';
+      tooltip.textContent = info;
+      return;
+    }
+  }
+  tooltip.style.display = 'none';
+});
+</script>
+</body>
+</html>
